@@ -1,6 +1,5 @@
 ﻿using AutoBogus;
 using curso.api.Models.Usuarios;
-using curso.api.tests.Configurations;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Net;
@@ -15,63 +14,69 @@ namespace curso.api.tests.Integrations.Controllers
     public class UsuarioControllerTests : IClassFixture<WebApplicationFactory<Startup>>, IAsyncLifetime
     {
         private readonly WebApplicationFactory<Startup> _factory;
-        protected readonly ITestLoggerFactory _output;
-        protected readonly HttpClient _httpClient;
+        private readonly ITestOutputHelper _output;
+        private readonly HttpClient _httpClient;
         protected RegistroViewModelInput RegistroViewModelInput;
-        protected LoginViewModelOutput LoginViewModelOutput;
+
 
         public UsuarioControllerTests(WebApplicationFactory<Startup> factory, ITestOutputHelper output)
         {
             _factory = factory;
-            _output = new TestLoggerFactory(output);
+            _output = output;
             _httpClient = _factory.CreateClient();
         }
 
         [Fact]
-        public async Task Registrar_InformandoUsuarioESenha_DeveRetornarSucesso()
+        //WhenGivenThen
+        public async Task Registrar_InformandoUsuarios_DeveRetornarSucesso()
         {
-            // Arrange
-            RegistroViewModelInput = new AutoFaker<RegistroViewModelInput>(AutoBogusConfiguration.LOCATE)
-                                            .RuleFor(p => p.Login, faker => faker.Person.UserName)
-                                            .RuleFor(p => p.Email, faker => faker.Person.Email);
-                                                
-            StringContent content = new StringContent(JsonConvert.SerializeObject(RegistroViewModelInput), Encoding.UTF8, "application/json");
+            //Arrange
+            RegistroViewModelInput = new RegistroViewModelInput
+            {
+                Login = "teste13",
+                Email = "teste13@teste.com",
+                Senha = "teste13"
+            };
 
-            // Act
+        StringContent content = new StringContent(JsonConvert.SerializeObject(RegistroViewModelInput), Encoding.UTF8, "application/json");
+
+            //Act 
             var httpClientRequest = await _httpClient.PostAsync("api/v1/usuario/registrar", content);
 
-            // Assert
-            _output.WriteLine($"{nameof(UsuarioControllerTests)}_{nameof(Registrar_InformandoUsuarioESenha_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
+            //Assert
             Assert.Equal(HttpStatusCode.Created, httpClientRequest.StatusCode);
+            _output.WriteLine(httpClientRequest.ToString());
         }
 
         [Fact]
+        //WhenGivenThen
         public async Task Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso()
         {
-            // Arrange
-            var loginViewModelInput = new LoginViewModelInput
+            //Arrange
+            var loginViewModeInput = new LoginViewModelInput
             {
                 Login = RegistroViewModelInput.Login,
                 Senha = RegistroViewModelInput.Senha
             };
-            StringContent content = new StringContent(JsonConvert.SerializeObject(loginViewModelInput), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(loginViewModeInput), Encoding.UTF8, "application/json");
 
-            // Act
+            //Act 
             var httpClientRequest = await _httpClient.PostAsync("api/v1/usuario/logar", content);
 
-            LoginViewModelOutput = JsonConvert.DeserializeObject<LoginViewModelOutput>(await httpClientRequest.Content.ReadAsStringAsync());
+            var loginViewModelOutput = JsonConvert.DeserializeObject<LoginViewModelOutput>(await httpClientRequest.Content.ReadAsStringAsync());
 
-            // Assert
+            //Assert
             Assert.Equal(HttpStatusCode.OK, httpClientRequest.StatusCode);
-            Assert.NotNull(LoginViewModelOutput.Token);
-            Assert.Equal(loginViewModelInput.Login, LoginViewModelOutput.Usuario.Login);
-            _output.WriteLine($"{nameof(UsuarioControllerTests)}_{nameof(Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
+            Assert.NotNull(loginViewModelOutput.Token);
+            Assert.Equal(loginViewModeInput.Login, loginViewModelOutput.Usuario.Login);
+            _output.WriteLine(loginViewModelOutput.Token);
+
         }
 
+        
         public async Task InitializeAsync()
         {
-            await Registrar_InformandoUsuarioESenha_DeveRetornarSucesso();
-            await Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso();
+            await Registrar_InformandoUsuarios_DeveRetornarSucesso();
         }
 
         public async Task DisposeAsync()
