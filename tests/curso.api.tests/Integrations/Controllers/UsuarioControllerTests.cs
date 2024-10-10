@@ -31,12 +31,15 @@ namespace curso.api.tests.Integrations.Controllers
         public async Task Registrar_InformandoUsuarios_DeveRetornarSucesso()
         {
             //Arrange
-            RegistroViewModelInput = new RegistroViewModelInput
-            {
-                Login = "teste13",
-                Email = "teste13@teste.com",
-                Senha = "teste13"
-            };
+            RegistroViewModelInput = new AutoFaker<RegistroViewModelInput>()
+                                            .RuleFor(p => p.Email, faker => faker.Person.Email);
+
+            //RegistroViewModelInput = new RegistroViewModelInput
+            //{
+            //    Login = "teste13",
+            //    Email = "teste13@teste.com",
+            //    Senha = "teste13"
+            //};
 
         StringContent content = new StringContent(JsonConvert.SerializeObject(RegistroViewModelInput), Encoding.UTF8, "application/json");
 
@@ -44,8 +47,8 @@ namespace curso.api.tests.Integrations.Controllers
             var httpClientRequest = await _httpClient.PostAsync("api/v1/usuario/registrar", content);
 
             //Assert
+            _output.WriteLine(await httpClientRequest.Content.ReadAsStringAsync());
             Assert.Equal(HttpStatusCode.Created, httpClientRequest.StatusCode);
-            _output.WriteLine(httpClientRequest.ToString());
         }
 
         [Fact]
