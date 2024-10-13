@@ -21,4 +21,21 @@ namespace curso.api.tests.Integrations.Controllers
         {
         }
 
+        [Fact]
+        //WhenGivenThen
+        public async Task Registrar_InformandoDadosDeUmCursoValidoEUmUsuarioAutenticado_DeveRetornarSucesso()
+        {
+            //Arrange
+            var cursoViewModelInput = new AutoFaker<CursoViewModelInput>();
+
+            StringContent content = new StringContent(JsonConvert.SerializeObject(cursoViewModelInput.Generate()), Encoding.UTF8, "application/json");
+
+            //Act
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoginViewModelOutput.Token);
+            var httpClientRequest = await _httpClient.PostAsync("api/v1/cursos", content);
+
+            //Assert
+            _output.WriteLine($"{nameof(CursoControllerTests)}_{nameof(Registrar_InformandoDadosDeUmCursoValidoEUmUsuarioAutenticado_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
+            Assert.Equal(HttpStatusCode.Created, httpClientRequest.StatusCode);
+        }
 }
