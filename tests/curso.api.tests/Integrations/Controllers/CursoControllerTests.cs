@@ -13,5 +13,12 @@ using Xunit.Abstractions;
 
 namespace curso.api.tests.Integrations.Controllers
 {
+    public class CursoControllerTests : UsuarioControllerTests
+    {
+
+        public CursoControllerTests(WebApplicationFactory<Startup> factory, ITestOutputHelper output)
+            : base(factory, output)
+        {
+        }
 
 }

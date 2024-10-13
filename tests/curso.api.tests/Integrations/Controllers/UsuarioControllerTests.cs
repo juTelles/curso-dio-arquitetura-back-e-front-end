@@ -13,10 +13,11 @@ namespace curso.api.tests.Integrations.Controllers
 {
     public class UsuarioControllerTests : IClassFixture<WebApplicationFactory<Startup>>, IAsyncLifetime
     {
-        private readonly WebApplicationFactory<Startup> _factory;
-        private readonly ITestOutputHelper _output;
-        private readonly HttpClient _httpClient;
+        protected readonly WebApplicationFactory<Startup> _factory;
+        protected readonly ITestOutputHelper _output;
+        protected readonly HttpClient _httpClient;
         protected RegistroViewModelInput RegistroViewModelInput;
+        protected LoginViewModelOutput LoginViewModelOutput;
 
 
         public UsuarioControllerTests(WebApplicationFactory<Startup> factory, ITestOutputHelper output)
@@ -80,6 +81,7 @@ namespace curso.api.tests.Integrations.Controllers
         public async Task InitializeAsync()
         {
             await Registrar_InformandoUsuarios_DeveRetornarSucesso();
+            await Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso();
         }
 
         public async Task DisposeAsync()
