@@ -57,23 +57,23 @@ namespace curso.api.tests.Integrations.Controllers
         public async Task Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso()
         {
             //Arrange
-            var loginViewModeInput = new LoginViewModelInput
+            var loginViewModelInput = new LoginViewModelInput
             {
                 Login = RegistroViewModelInput.Login,
                 Senha = RegistroViewModelInput.Senha
             };
-            StringContent content = new StringContent(JsonConvert.SerializeObject(loginViewModeInput), Encoding.UTF8, "application/json");
+            StringContent content = new StringContent(JsonConvert.SerializeObject(loginViewModelInput), Encoding.UTF8, "application/json");
 
             //Act 
             var httpClientRequest = await _httpClient.PostAsync("api/v1/usuario/logar", content);
 
-            var loginViewModelOutput = JsonConvert.DeserializeObject<LoginViewModelOutput>(await httpClientRequest.Content.ReadAsStringAsync());
+            LoginViewModelOutput = JsonConvert.DeserializeObject<LoginViewModelOutput>(await httpClientRequest.Content.ReadAsStringAsync());
 
             //Assert
             Assert.Equal(HttpStatusCode.OK, httpClientRequest.StatusCode);
-            Assert.NotNull(loginViewModelOutput.Token);
-            Assert.Equal(loginViewModeInput.Login, loginViewModelOutput.Usuario.Login);
-            _output.WriteLine(loginViewModelOutput.Token);
+            Assert.NotNull(LoginViewModelOutput.Token);
+            Assert.Equal(loginViewModelInput.Login, LoginViewModelOutput.Usuario.Login);
+            _output.WriteLine(LoginViewModelOutput.Token);
 
         }
 
