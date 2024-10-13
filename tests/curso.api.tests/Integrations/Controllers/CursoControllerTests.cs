@@ -56,4 +56,16 @@ namespace curso.api.tests.Integrations.Controllers
             Assert.NotEmpty(curso);
             Assert.Equal(HttpStatusCode.OK, httpClientRequest.StatusCode);
         }
+
+
+        public Task DisposeAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task InitializeAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+    }
 }
