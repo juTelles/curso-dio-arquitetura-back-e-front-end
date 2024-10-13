@@ -38,4 +38,22 @@ namespace curso.api.tests.Integrations.Controllers
             _output.WriteLine($"{nameof(CursoControllerTests)}_{nameof(Registrar_InformandoDadosDeUmCursoValidoEUmUsuarioAutenticado_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
             Assert.Equal(HttpStatusCode.Created, httpClientRequest.StatusCode);
         }
+        [Fact]
+        //WhenGivenThen
+        public async Task Obter_InformandoUsuarioAutenticado_DeveRetornarSucesso()
+        {
+            //Arrange
+            await Registrar_InformandoDadosDeUmCursoValidoEUmUsuarioAutenticado_DeveRetornarSucesso();
+
+            //Act
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", LoginViewModelOutput.Token);
+            var httpClientRequest = await _httpClient.GetAsync("api/v1/cursos");
+
+            //Assert
+            _output.WriteLine($"{nameof(CursoControllerTests)}_{nameof(Obter_InformandoUsuarioAutenticado_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
+            var curso = JsonConvert.DeserializeObject<IList<CursoViewModelOutput>>(await httpClientRequest.Content.ReadAsStringAsync());
+
+            Assert.NotEmpty(curso);
+            Assert.Equal(HttpStatusCode.OK, httpClientRequest.StatusCode);
+        }
 }
