@@ -1,5 +1,6 @@
 ﻿using AutoBogus;
 using curso.api.Models.Cursos;
+using curso.api.Models.Usuarios;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System.Collections.Generic;

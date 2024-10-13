@@ -35,13 +35,6 @@ namespace curso.api.tests.Integrations.Controllers
             RegistroViewModelInput = new AutoFaker<RegistroViewModelInput>()
                                             .RuleFor(p => p.Email, faker => faker.Person.Email);
 
-            //RegistroViewModelInput = new RegistroViewModelInput
-            //{
-            //    Login = "teste13",
-            //    Email = "teste13@teste.com",
-            //    Senha = "teste13"
-            //};
-
         StringContent content = new StringContent(JsonConvert.SerializeObject(RegistroViewModelInput), Encoding.UTF8, "application/json");
 
             //Act 
@@ -75,10 +68,8 @@ namespace curso.api.tests.Integrations.Controllers
             Assert.Equal(loginViewModelInput.Login, LoginViewModelOutput.Usuario.Login);
             _output.WriteLine(LoginViewModelOutput.Token);
             _output.WriteLine($"{nameof(UsuarioControllerTests)}_{nameof(Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
-
         }
 
-        
         public async Task InitializeAsync()
         {
             await Registrar_InformandoUsuarios_DeveRetornarSucesso();
