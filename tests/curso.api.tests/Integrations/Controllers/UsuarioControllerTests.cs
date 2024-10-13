@@ -48,7 +48,7 @@ namespace curso.api.tests.Integrations.Controllers
             var httpClientRequest = await _httpClient.PostAsync("api/v1/usuario/registrar", content);
 
             //Assert
-            _output.WriteLine(await httpClientRequest.Content.ReadAsStringAsync());
+            _output.WriteLine($"{nameof(UsuarioControllerTests)}_{nameof(Registrar_InformandoUsuarios_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
             Assert.Equal(HttpStatusCode.Created, httpClientRequest.StatusCode);
         }
 
@@ -74,6 +74,7 @@ namespace curso.api.tests.Integrations.Controllers
             Assert.NotNull(LoginViewModelOutput.Token);
             Assert.Equal(loginViewModelInput.Login, LoginViewModelOutput.Usuario.Login);
             _output.WriteLine(LoginViewModelOutput.Token);
+            _output.WriteLine($"{nameof(UsuarioControllerTests)}_{nameof(Logar_InformandoUsuarioESenhaExistentes_DeveRetornarSucesso)} = {await httpClientRequest.Content.ReadAsStringAsync()}");
 
         }
 
